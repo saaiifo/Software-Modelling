@@ -1,174 +1,223 @@
-import datetime
-from enum import Enum
+from datetime import datetime
 
-class Gender(Enum):
-    Female = 1
-    Male = 2
+class DentalCompany:
+    def __init__(self, name):
+        self.name = name
+        self.branches = [] # list to store all the branches of the dental company
 
-class Nationality(Enum):
-    Emirati = 1
-    Omani = 2
-    Saudi = 3
+    def set_branch(self, branch):
+        self.branches.append(branch) # add a branch to the list of branches
 
-class customer:
-    def __init__(self, f_name: str, l_name: str, gender: Gender, phone_num: str, nationality: Nationality):
-        self.first_name = f_name
-        self.last_name = l_name
-        self._gender = gender
-        self._phone_num = phone_num
-        self._nationality = nationality
-        
-    def getfirst_name(self):
-        return self.first_name
-    
-    def setfirst_name(self, value):
-        self.first_name = value
-    
-    def getlast_name(self):
-        return self.last_name
-    
-    def setlast_name(self, value):
-        self.last_name = value
-    
-    def get_gender(self):
-        return self._gender
-    
-    def set_gender(self, value):
-        self._gender = value
-    
-    def get_phone_num(self):
-        return self._phone_num
-    
-    def set_phone_num(self, value):
-        self._phone_num = value
-    
-    def get_nationality(self):
-        return self._nationality
-    
-    def set_nationality(self, value):
-        self._nationality = value
-        
-    def print_customer_details(self):
-        print(f"Name: {self.getfirst_name()} {self.getlast_name()}", f"\nGender: {self.get_gender().name}",f"\nPhone number: {self.get_phone_num()}",f"\nNationality: {self.get_nationality().name}")
-        
-customer1 = customer(f_name='Saif', l_name='Alkatheeri', gender=Gender.Male, phone_num='0502874652', nationality=Nationality.Emirati)
-customer2 = customer(f_name='Khalid', l_name='Alkatheeri', gender=Gender.Male, phone_num='0500192854', nationality=Nationality.Emirati)
+    def delete_branch(self, branch):
+        self.branches.remove(branch)  # remove a branch from the list of branches
 
-customer1.print_customer_details()
-print('\n\n')
-customer2.print_customer_details()
 
-from enum import Enum
+class Branch:
+    def __init__(self, address, phone_number, manager):
+        self.address = address  # the address of the branch
+        self.phone_number = phone_number  # the phone number of the branch
+        self.manager = manager  # the manager of the branch
+        self.staff = []  # list to store all the staff members of the branch
+        self.services = []  # list to store all the services provided by the branch
 
-class Make(Enum):
-    toyota = 1
-    lexus = 2
-    nissan = 3
+    def set_staff(self, staff):
+        self.staff.append(staff)  # add a staff member to the list of staff members
 
-class Model(Enum):
-    avalon = 1
-    lx570 = 2
-    m4 = 3
+    def delete_staff(self, staff):
+        self.staff.remove(staff)  # remove a staff member from the list of staff members
+
+    def set_service(self, service):
+        self.services.append(service)  # add a service to the list of services
+
+    def delete_service(self, service):
+        self.services.remove(service)  # remove a service from the list of services
+
+    def book_appointment(self, patient, date, service, staff):
+        appointment = Appointment(patient, date, service, staff)  # create a new appointment
+        # add the appointment to the staff member's schedule
+        staff.set_appointment(appointment)
+        # add the appointment to the patient's list of appointments
+        patient.appointments.append(appointment)
+
+    def checkout(self, patient):
+        total_cost = 0
+        # calculate the total cost of all the appointments of the patient
+        for appointment in patient.appointments:
+            total_cost += appointment.service.cost
+        # add 5% VAT to the total cost
+        total_cost *= 1.05
+        return total_cost
+
+
+class Staff:
+    def __init__(self, name, position, phone_number):
+        # initialize the Staff object with name, position, phone number and an empty list for schedule.
+        self.name = name
+        self.position = position
+        self.phone_number = phone_number
+        self.schedule = []
+
+    def set_appointment(self, appointment):
+        # add the given appointment to the schedule list of this staff object.
+        self.schedule.append(appointment)
+        total_cost = 0
+        # Calculate the cost of the appointment by adding the service cost to the total cost.
+        total_cost += appointment.service.cost
+
+
+class Patient:
+    def __init__(self, name, phone_number):
+        # initialize the Patient object with name, phone number and an empty list for appointments.
+        self.name = name
+        self.phone_number = phone_number
+        self.appointments = []
+
+
+class Manager(Staff):
+    def __init__(self, name, position, phone_number, branch):
+        # initialize the Manager object with name, position, phone number, and branch, by calling the superclass constructor.
+        super().__init__(name, position, phone_number)
+        self.branch = branch
+
+    def get_branch(self):
+        # return the branch attribute of this manager object.
+        return self.branch
+
 
 class Service:
-    class Type(Enum):
-        oil = 1
-        tire = 2
-        brake = 3
-    
-    def __init__(self, service_type, cost, duration, availability, mechanic):
-        self.service_type = service_type
+    def __init__(self, name, description, cost):
+        # initialize the Service object with name, description, and cost attributes.
+        self.name = name
+        self.description = description
         self.cost = cost
-        self.duration = duration
-        self.availability = availability
-        self.mechanic = mechanic
 
-class Car:
-    def __init__(self, make: Make, model: Model, year: int, color: str, ID: str, service: Service):
-        self._make = make
-        self._model = model
-        self._year = year
-        self._color = color
-        self._ID = ID
-        self._service = service
-        
-    def get_make(self):
-        return self._make
-    
-    def get_model(self):
-        return self._model
-    
-    def get_year(self):
-        return self._year
-    
-    def get_color(self):
-        return self._color
-    
-    def get_ID(self):
-        return self._ID
-    
-    def get_service(self):
-        return self._service
-    
-    def set_make(self, value):
-        self._make = value
-        
-    def set_model(self, value):
-        self._model = value
-        
-    def set_year(self, value):
-        self._year = value
-        
-    def set_color(self, value):
-        self._color = value
-        
-    def set_ID(self, value):
-        self._ID = value
-        
-    def set_service(self, value):
-        self._service = value
 
-    def print_details(self):
-            print(f"Make: {self._make.name}")
-            print(f"Model: {self._model.name}")
-            print(f"Year: {self._year}")
-            print(f"Color: {self._color}")
-            print(f"ID: {self._ID}")
-            print(f"Service: {self._service.service_type.name}")
-
-car1 = Car(make=Make.toyota, model=Model.avalon, year=2020, color='pearl white', ID='232FGT23', service=Service(Service.Type.oil, 100, 60, 'Mon-Sat', 'Shamnaz'))
-car2 = Car(make=Make.lexus, model=Model.lx570, year=2009, color='silver', ID='454JPT45', service=Service(Service.Type.tire, 200, 90, 'Mon-Fri', 'Shamnaz'))
-
-print('\n\n')
-car1.print_details()
-print('\n\n')
-car2.print_details()
-print('\n\n')
-
-class Receipt:
-    def __init__(self, customer: customer, car: Car, service: Service, total: float):
-        self.customer = customer
-        self.car = car
+class Appointment:
+    def __init__(self, patient, date, service, staff):
+        # initialize the Appointment object with patient, date, service, and staff attributes.
+        self.patient = patient
+        self.date = date
         self.service = service
-        self.total = total
-    
-    def print_receipt(self):
-        print(f"Customer Name: {self.customer.getfirst_name()} {self.customer.getlast_name()}")
-        print(f"Cell Phone Number: {self.customer.get_phone_num()}")
-        print(f"Date: {datetime.date.today()}")
-        print(f"Mechanic Name: {self.car.get_service().mechanic}")
-        print(f"Vehicle Type: {self.car.get_make().name} {self.car.get_model().name}")
-        print(f"Vehicle Color: {self.car.get_color()}")
-        print(f"Vehicle ID: {self.car.get_ID()}")
-        print(f"Service: {self.service.service_type.name}")
-        print(f"Total: {self.total}")
+        self.staff = staff
+        
+        
+        
+'''
+space between codes
+'''
+
+# create the dental company
+bright_smiles = DentalCompany("Bright Smiles")
+
+# create a manager
+manager_1 = Manager("Saif", "Manager", "111-122", None)
+
+# create a branch
+branch_1 = Branch("Abu Dhabi", "123-121", manager_1)
+manager_1.branch = branch_1
+
+# add staff to the branch
+receptionist_1 = Staff("Ahmed", "Receptionist", "111-123")
+hygienist_1 = Staff("Ali", "Hygienist", "111-124")
+dentist_1 = Staff("Sarah", "Dentist", "111-125")
+branch_1.set_staff(receptionist_1)
+branch_1.set_staff(hygienist_1)
+branch_1.set_staff(dentist_1)
+
+# create services offered by the branch
+cleaning = Service("Cleaning", "Annualy teeth cleaning", 259.00)
+filling = Service("Filling", "Tooth filling", 499.00)
+implant = Service("Implant", "Tooth implant", 1499.00)
+branch_1.set_service(cleaning)
+branch_1.set_service(filling)
+branch_1.set_service(implant)
 
 
+'''
+space between codes
+'''
 
-receipt1 = Receipt(customer=customer1, car=car1, service=car1.get_service(), total=100)
-receipt1.print_receipt()
+# a function to print details of a branch
+def print_branch_details(branch):
+    # Print the branch details
+    print(f"\nBranch Details\n--------------")
+    print(f"Address: {branch.address}")
+    print(f"Phone Number: {branch.phone_number}")
+    print(f"Manager: {branch.manager.name}")
 
-print('\n\n')
+    # print details of staff working at the branch
+    print("\nStaff:")
+    for staff in branch.staff:
+        print(f"\tName: {staff.name}")
+        print(f"\tPosition: {staff.position}")
+        print(f"\tPhone Number: {staff.phone_number}")
+        print("\tSchedule:")
+        print('\n')
 
-receipt2 = Receipt(customer=customer2, car=car2, service=car2.get_service(), total=200)
-receipt2.print_receipt()
+        # print the schedule of the current staff member
+        for appointment in staff.schedule:
+            print(f"\t\tDate: {appointment.date}")
+            print(f"\t\tService: {appointment.service.name}")
+            print(f"\t\tPatient: {appointment.patient.name}\n")
+
+    # print details of services provided by the branch
+    print("\nServices:")
+    for service in branch.services:
+        print(f"\tName: {service.name}")
+        print(f"\tDescription: {service.description}")
+        print(f"\tCost: {service.cost}\n")
+
+
+# a function to print details of a patient
+def print_patient_details(patient):
+    # Print the patient details
+    print(f"\nPatient Details\n---------------")
+    print(f"Name: {patient.name}")
+    print(f"Phone Number: {patient.phone_number}")
+
+    # print the appointments for the current patient
+    print("\nAppointments:")
+    for appointment in patient.appointments:
+        print(f"\tDate: {appointment.date}")
+        print(f"\tService: {appointment.service.name}")
+        print(f"\tStaff: {appointment.staff.name}")
+        print("\n")
+
+
+# a function to print details of a staff member
+def print_staff_details(staff):
+    # Print the staff member details
+    print(f"\nStaff Details\n-------------")
+    print(f"Name: {staff.name}")
+    print(f"Position: {staff.position}")
+    print(f"Phone Number: {staff.phone_number}")
+    print('\n')
+
+    # print the schedule of the current staff member
+    for appointment in staff.schedule:
+        print(f"\tDate: {appointment.date}")
+        print(f"\tService: {appointment.service.name}")
+        print(f"\tPatient: {appointment.patient.name}\n")
+
+# a function to print details of a service
+def print_service_details(service):
+    # Print the service details
+    print(f"\nService Details\n---------------")
+    print(f"Name: {service.name}")
+    print(f"Description: {service.description}")
+    print(f"Cost: {service.cost}\n")
+
+# create a patient and book an appointment
+patient_2 = Patient("Khalid", "0506279376")
+date_1 = '2023/4/18 @ 10:00 AM'  # April 18, 2023 at 10:00 AM
+appointment_1 = branch_1.book_appointment(patient_2, date_1, implant, hygienist_1)
+
+# print all details
+print_branch_details(branch_1)
+print_patient_details(patient_1)
+print_staff_details(receptionist_1)
+print_service_details(implant)
+
+# checkout the patient
+total_cost = branch_1.checkout(patient_2)
+print(f"\n\n{patient_2.name} has to pay: ${total_cost:.2f}\n\n")
