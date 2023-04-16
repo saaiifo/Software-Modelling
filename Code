@@ -221,3 +221,60 @@ print_service_details(implant)
 # checkout the patient
 total_cost = branch_1.checkout(patient_2)
 print(f"\n\n{patient_2.name} has to pay: ${total_cost:.2f}\n\n")
+
+### TEST CASES
+
+# Test Case 1 (# Adding branches)
+
+
+branch1 = Branch('baitna', '02827386', 'saif')
+
+print(branch1.address)
+print(branch1.phone_number)
+print(branch1.manager)
+
+# Test Case 2 (# Adding Staff)
+
+
+staff1 = Staff('Saif','receptionist','0509287364')
+
+print(staff1.phone_number)
+print(staff1.position)
+print(staff1.name)
+
+# Test Case 3 (# Adding Paitent)
+
+
+patient1 = Patient('saif','0508273829')
+
+print(patient1.name)
+print(patient1.phone_number)
+
+# Test Case 4 (# Adding Service)
+
+
+service1 = Service('Flossing','Floss your teeth','15.00')
+
+print(service1.cost)
+print(service1.description)
+print(service1.name)
+
+# Test Case 5 (# Adding Manager)
+
+
+manager1 = Manager('Saif','manager','0548975425',branch1.address)
+
+print(manager1.name)
+print(manager1.position)
+print(manager1.phone_number)
+print(manager1.branch)
+
+# Test Case 6 (# Adding Appointment)
+
+
+appointment1 = Appointment(patient1.name, '16/04/2023', service1.name, staff1.name)#Patient, date, service, staff
+
+print(appointment1.patient)
+print(appointment1.date)
+print(appointment1.service)
+print(appointment1.staff)
