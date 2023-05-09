@@ -1,280 +1,624 @@
-from datetime import datetime
-
-class DentalCompany:
-    def __init__(self, name):
-        self.name = name
-        self.branches = [] # list to store all the branches of the dental company
-
-    def set_branch(self, branch):
-        self.branches.append(branch) # add a branch to the list of branches
-
-    def delete_branch(self, branch):
-        self.branches.remove(branch)  # remove a branch from the list of branches
-
-
-class Branch:
-    def __init__(self, address, phone_number, manager):
-        self.address = address  # the address of the branch
-        self.phone_number = phone_number  # the phone number of the branch
-        self.manager = manager  # the manager of the branch
-        self.staff = []  # list to store all the staff members of the branch
-        self.services = []  # list to store all the services provided by the branch
-
-    def set_staff(self, staff):
-        self.staff.append(staff)  # add a staff member to the list of staff members
-
-    def delete_staff(self, staff):
-        self.staff.remove(staff)  # remove a staff member from the list of staff members
-
-    def set_service(self, service):
-        self.services.append(service)  # add a service to the list of services
-
-    def delete_service(self, service):
-        self.services.remove(service)  # remove a service from the list of services
-
-    def book_appointment(self, patient, date, service, staff):
-        appointment = Appointment(patient, date, service, staff)  # create a new appointment
-        # add the appointment to the staff member's schedule
-        staff.set_appointment(appointment)
-        # add the appointment to the patient's list of appointments
-        patient.appointments.append(appointment)
-
-    def checkout(self, patient):
-        total_cost = 0
-        # calculate the total cost of all the appointments of the patient
-        for appointment in patient.appointments:
-            total_cost += appointment.service.cost
-        # add 5% VAT to the total cost
-        total_cost *= 1.05
-        return total_cost
-
-
-class Staff:
-    def __init__(self, name, position, phone_number):
-        # initialize the Staff object with name, position, phone number and an empty list for schedule.
-        self.name = name
-        self.position = position
-        self.phone_number = phone_number
-        self.schedule = []
-
-    def set_appointment(self, appointment):
-        # add the given appointment to the schedule list of this staff object.
-        self.schedule.append(appointment)
-        total_cost = 0
-        # Calculate the cost of the appointment by adding the service cost to the total cost.
-        total_cost += appointment.service.cost
-
-
-class Patient:
-    def __init__(self, name, phone_number):
-        # initialize the Patient object with name, phone number and an empty list for appointments.
-        self.name = name
-        self.phone_number = phone_number
-        self.appointments = []
-
-
-class Manager(Staff):
-    def __init__(self, name, position, phone_number, branch):
-        # initialize the Manager object with name, position, phone number, and branch, by calling the superclass constructor.
-        super().__init__(name, position, phone_number)
-        self.branch = branch
-
-    def get_branch(self):
-        # return the branch attribute of this manager object.
-        return self.branch
-
-
-class Service:
-    def __init__(self, name, description, cost):
-        # initialize the Service object with name, description, and cost attributes.
-        self.name = name
-        self.description = description
-        self.cost = cost
-
-
-class Appointment:
-    def __init__(self, patient, date, service, staff):
-        # initialize the Appointment object with patient, date, service, and staff attributes.
-        self.patient = patient
-        self.date = date
-        self.service = service
-        self.staff = staff
-        
-        
-        
-'''
-space between codes
-'''
-
-# create the dental company
-bright_smiles = DentalCompany("Bright Smiles")
-
-# create a manager
-manager_1 = Manager("Saif", "Manager", "111-122", None)
-
-# create a branch
-branch_1 = Branch("Abu Dhabi", "123-121", manager_1)
-manager_1.branch = branch_1
-
-# add staff to the branch
-receptionist_1 = Staff("Ahmed", "Receptionist", "111-123")
-hygienist_1 = Staff("Ali", "Hygienist", "111-124")
-dentist_1 = Staff("Sarah", "Dentist", "111-125")
-branch_1.set_staff(receptionist_1)
-branch_1.set_staff(hygienist_1)
-branch_1.set_staff(dentist_1)
-
-# create services offered by the branch
-cleaning = Service("Cleaning", "Annualy teeth cleaning", 259.00)
-filling = Service("Filling", "Tooth filling", 499.00)
-implant = Service("Implant", "Tooth implant", 1499.00)
-branch_1.set_service(cleaning)
-branch_1.set_service(filling)
-branch_1.set_service(implant)
-
-
-'''
-space between codes
-'''
-
-# a function to print details of a branch
-def print_branch_details(branch):
-    # Print the branch details
-    print(f"\nBranch Details\n--------------")
-    print(f"Address: {branch.address}")
-    print(f"Phone Number: {branch.phone_number}")
-    print(f"Manager: {branch.manager.name}")
-
-    # print details of staff working at the branch
-    print("\nStaff:")
-    for staff in branch.staff:
-        print(f"\tName: {staff.name}")
-        print(f"\tPosition: {staff.position}")
-        print(f"\tPhone Number: {staff.phone_number}")
-        print("\tSchedule:")
-        print('\n')
-
-        # print the schedule of the current staff member
-        for appointment in staff.schedule:
-            print(f"\t\tDate: {appointment.date}")
-            print(f"\t\tService: {appointment.service.name}")
-            print(f"\t\tPatient: {appointment.patient.name}\n")
-
-    # print details of services provided by the branch
-    print("\nServices:")
-    for service in branch.services:
-        print(f"\tName: {service.name}")
-        print(f"\tDescription: {service.description}")
-        print(f"\tCost: {service.cost}\n")
-
-
-# a function to print details of a patient
-def print_patient_details(patient):
-    # Print the patient details
-    print(f"\nPatient Details\n---------------")
-    print(f"Name: {patient.name}")
-    print(f"Phone Number: {patient.phone_number}")
-
-    # print the appointments for the current patient
-    print("\nAppointments:")
-    for appointment in patient.appointments:
-        print(f"\tDate: {appointment.date}")
-        print(f"\tService: {appointment.service.name}")
-        print(f"\tStaff: {appointment.staff.name}")
-        print("\n")
-
-
-# a function to print details of a staff member
-def print_staff_details(staff):
-    # Print the staff member details
-    print(f"\nStaff Details\n-------------")
-    print(f"Name: {staff.name}")
-    print(f"Position: {staff.position}")
-    print(f"Phone Number: {staff.phone_number}")
-    print('\n')
-
-    # print the schedule of the current staff member
-    for appointment in staff.schedule:
-        print(f"\tDate: {appointment.date}")
-        print(f"\tService: {appointment.service.name}")
-        print(f"\tPatient: {appointment.patient.name}\n")
-
-# a function to print details of a service
-def print_service_details(service):
-    # Print the service details
-    print(f"\nService Details\n---------------")
-    print(f"Name: {service.name}")
-    print(f"Description: {service.description}")
-    print(f"Cost: {service.cost}\n")
-
-# create a patient and book an appointment
-patient_2 = Patient("Khalid", "0506279376")
-date_1 = '2023/4/18 @ 10:00 AM'  # April 18, 2023 at 10:00 AM
-appointment_1 = branch_1.book_appointment(patient_2, date_1, implant, hygienist_1)
-
-# print all details
-print_branch_details(branch_1)
-print_patient_details(patient_1)
-print_staff_details(receptionist_1)
-print_service_details(implant)
-
-# checkout the patient
-total_cost = branch_1.checkout(patient_2)
-print(f"\n\n{patient_2.name} has to pay: ${total_cost:.2f}\n\n")
-
-### TEST CASES
-
-# Test Case 1 (# Adding branches)
-
-
-branch1 = Branch('baitna', '02827386', 'saif')
-
-print(branch1.address)
-print(branch1.phone_number)
-print(branch1.manager)
-
-# Test Case 2 (# Adding Staff)
-
-
-staff1 = Staff('Saif','receptionist','0509287364')
-
-print(staff1.phone_number)
-print(staff1.position)
-print(staff1.name)
-
-# Test Case 3 (# Adding Paitent)
-
-
-patient1 = Patient('saif','0508273829')
-
-print(patient1.name)
-print(patient1.phone_number)
-
-# Test Case 4 (# Adding Service)
-
-
-service1 = Service('Flossing','Floss your teeth','15.00')
-
-print(service1.cost)
-print(service1.description)
-print(service1.name)
-
-# Test Case 5 (# Adding Manager)
-
-
-manager1 = Manager('Saif','manager','0548975425',branch1.address)
-
-print(manager1.name)
-print(manager1.position)
-print(manager1.phone_number)
-print(manager1.branch)
-
-# Test Case 6 (# Adding Appointment)
-
-
-appointment1 = Appointment(patient1.name, '16/04/2023', service1.name, staff1.name)#Patient, date, service, staff
-
-print(appointment1.patient)
-print(appointment1.date)
-print(appointment1.service)
-print(appointment1.staff)
+import tkinter as tk
+from tkinter import ttk, messagebox
+import pickle
+
+# Sample data
+employees = {
+    47899: {'Name': 'Susan Meyers', 'Department': 'Accounting', 'Job Title': 'Manager', 'Basic Salary': 37500, 'Sales': 0},
+    39119: {'Name': 'Mark Jones', 'Department': 'IT', 'Job Title': 'Salesperson', 'Basic Salary': 26000, 'Sales': 0, 'Manager ID': 47899},
+    81774: {'Name': 'Joy Rogers', 'Department': 'Manufacturing', 'Job Title': 'Salesperson', 'Basic Salary': 24000, 'Sales': 0, 'Manager ID': 47899}
+}
+
+cars = {
+    'Jazz VX3': {'Price': 55000, 'Type': 'Hatch', 'Fuel Capacity': 40, 'Max Speed': 180, 'Color': 'Red'},
+    'Mark3 SX3': {'Price': 84000, 'Type': 'Sedan', 'Fuel Capacity': 50, 'Max Speed': 220, 'Color': 'Blue'},
+    'Wagoner ZX3': {'Price': 125000, 'Type': 'SUV', 'Fuel Capacity': 60, 'Max Speed': 240, 'Color': 'Black'}
+}
+
+sales = []
+SALES_DATA_FILE = 'sales_data.pkl'
+EMPLOYEE_DATA_FILE = 'employee_data.pkl'
+CAR_DATA_FILE = 'car_data.pkl'
+SALES_DATA_FILE = 'sales_data.pkl'  # Add this line
+
+def save_data(data, filename):
+    with open('employees.pickle', 'wb') as f:
+        pickle.dump(employees, f)
+    with open('cars.pickle', 'wb') as f:
+        pickle.dump(cars, f)
+    with open(filename, 'wb') as file:
+        pickle.dump(data, file)
+
+def load_data():
+    global employees
+    global cars
+    try:
+        with open('employees.pickle', 'rb') as f:
+            employees = pickle.load(f)
+    except FileNotFoundError:
+        pass
+    try:
+        with open('cars.pickle', 'rb') as f:
+            cars = pickle.load(f)
+    except FileNotFoundError:
+        pass
+
+load_data()
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.geometry('800x600')
+        self.title('B&M Car Sales System')
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(expand=True, fill=tk.BOTH)
+
+        self.employee_tab = EmployeeTab(self.notebook)
+        self.notebook.add(self.employee_tab, text="Employees")
+
+        self.car_tab = CarTab(self.notebook)
+        self.notebook.add(self.car_tab, text="Cars")
+
+        self.sales_tab = SalesTab(self.notebook)
+        self.notebook.add(self.sales_tab, text="Sales")
+
+        self.salary_tab = SalaryTab(self.notebook)
+        self.notebook.add(self.salary_tab, text="Salaries")
+
+class EmployeeTab(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Create and place widgets for employee ID
+        self.id_label = tk.Label(self, text="ID")
+        self.id_label.grid(row=0, column=0)
+        self.id_entry = tk.Entry(self)
+        self.id_entry.grid(row=0, column=1)
+
+        # Create and place widgets for employee name
+        self.name_label = tk.Label(self, text="Name")
+        self.name_label.grid(row=1, column=0)
+        self.name_entry = tk.Entry(self)
+        self.name_entry.grid(row=1, column=1)
+
+        # Create and place widgets for employee department
+        self.department_label = tk.Label(self, text="Department")
+        self.department_label.grid(row=2, column=0)
+        self.department_entry = tk.Entry(self)
+        self.department_entry.grid(row=2, column=1)
+
+        # Create and place widgets for employee job title
+        self.job_title_label = tk.Label(self, text="Job Title")
+        self.job_title_label.grid(row=3, column=0)
+        self.job_title_entry = tk.Entry(self)
+        self.job_title_entry.grid(row=3, column=1)
+
+        # Create and place widgets for employee basic salary
+        self.basic_salary_label = tk.Label(self, text="Basic Salary")
+        self.basic_salary_label.grid(row=4, column=0)
+        self.basic_salary_entry = tk.Entry(self)
+        self.basic_salary_entry.grid(row=4, column=1)
+
+        # Create and place buttons for adding, deleting, editing, and updating employees
+        self.add_button = tk.Button(self, text="Add", command=self.add_employee)
+        self.add_button.grid(row=5, column=0)
+        self.delete_button = tk.Button(self, text="Delete", command=self.delete_employee)
+        self.delete_button.grid(row=5, column=1)
+        self.edit_button = tk.Button(self, text="Edit", command=self.edit_employee)
+        self.edit_button.grid(row=5, column=2)
+        self.update_button = tk.Button(self, text="Update", command=self.update_employee)
+        self.update_button.grid(row=5, column=3)
+
+        # Create and place listbox for displaying employees
+        self.employee_listbox = tk.Listbox(self)
+        self.employee_listbox.bind('<<ListboxSelect>>', self.on_employee_select)
+        self.employee_listbox.grid(row=6, columnspan=3, sticky="ew")
+        self.refresh_employee_list()
+
+    # Function to handle employee selection in the listbox
+    def on_employee_select(self, event):
+        selected = self.employee_listbox.curselection()
+        if not selected:
+            return
+
+        # Get the employee ID from the selected listbox item and display employee details
+        employee_id = int(self.employee_listbox.get(selected).split(" - ")[0])
+        self.display_employee_details(employee_id)
+
+    def update_employee(self):
+        # Get the currently selected employee in the listbox
+        selected = self.employee_listbox.curselection()
+        if not selected:
+            messagebox.showerror("Error", "No employee selected.")
+            return
+
+        try:
+            # Gather new employee data from the input fields
+            old_employee_id = int(self.employee_listbox.get(selected).split(" - ")[0])
+            new_employee_id = int(self.id_entry.get())
+            name = self.name_entry.get()
+            department = self.department_entry.get()
+            job_title = self.job_title_entry.get()
+            basic_salary = int(self.basic_salary_entry.get())
+
+            # Check if all required fields are filled
+            if not name or not department or not job_title:
+                messagebox.showerror("Error", "Please fill in all fields.")
+                return
+
+            # Update the employee data in the dictionary
+            del employees[old_employee_id]
+            employees[new_employee_id] = {'Name': name, 'Department': department, 'Job Title': job_title,
+                                          'Basic Salary': basic_salary, 'Sales': 0}
+            # Refresh the employee list and save the data to file
+            self.refresh_employee_list()
+            messagebox.showinfo("Success", "Employee updated.")
+            save_data()
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input. Please enter a valid Employee ID and Basic Salary.")
+
+    def refresh_employee_list(self):
+        # Clear the listbox and repopulate it with updated employee data
+        self.employee_listbox.delete(0, tk.END)
+        for employee_id, employee in employees.items():
+            self.employee_listbox.insert(tk.END, f"{employee_id} - {employee['Name']}")
+
+    def edit_employee(self):
+        # Get the currently selected employee in the listbox and display their data in the input fields
+        selected = self.employee_listbox.curselection()
+        if not selected:
+            messagebox.showerror("Error", "No employee selected.")
+            return
+
+        employee_id = int(self.employee_listbox.get(selected).split(" - ")[0])
+        employee = employees[employee_id]
+
+        # Fill the input fields with the selected employee's data
+        self.id_entry.delete(0, tk.END)
+        self.id_entry.insert(0, str(employee_id))
+        self.name_entry.delete(0, tk.END)
+        self.name_entry.insert(0, employee['Name'])
+        self.department_entry.delete(0, tk.END)
+        self.department_entry.insert(0, employee['Department'])
+        self.job_title_entry.delete(0, tk.END)
+        self.job_title_entry.insert(0, employee['Job Title'])
+        self.basic_salary_entry.delete(0, tk.END)
+        self.basic_salary_entry.insert(0, str(employee['Basic Salary']))
+
+    def add_employee(self):
+        # Add a new employee to the dictionary using the data from the input fields
+        try:
+            employee_id = int(self.id_entry.get())
+            name = self.name_entry.get()
+            department = self.department_entry.get()
+            job_title = self.job_title_entry.get()
+            basic_salary = int(self.basic_salary_entry.get())
+
+            if not name or not department or not job_title:
+                messagebox.showerror("Error", "Please fill in all fields.")
+                return
+
+            if employee_id in employees:
+                messagebox.showerror("Error", "Employee ID already exists.")
+                return
+
+            employees[employee_id] = {'Name': name, 'Department': department, 'Job Title': job_title,
+                                      'Basic Salary': basic_salary, 'Sales': 0}
+            self.refresh_employee_list()
+            messagebox.showinfo("Success", "Employee added.")
+            save_data()
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input. Please enter a valid Employee ID and Basic Salary.")
+
+    def delete_employee(self):
+        # Delete the selected employee from the dictionary and update the listbox
+        selected = self.employee_listbox.curselection()
+        if not selected:
+            messagebox.showerror("Error", "No employee selected.")
+            return
+
+        employee_id = int(self.employee_listbox.get(selected).split(" - ")[0])
+
+        if employee_id not in employees:
+            messagebox.showerror("Error", "Employee not found.")
+            return
+
+        del employees[employee_id]
+        self.refresh_employee_list()
+        messagebox.showinfo("Success", "Employee deleted.")
+        save_data()
+
+    def display_employee_details(self, employee_id):
+        # Display the selected employee's salary details in the salary_var label variable
+        employee = employees[employee_id]
+        salary_text = f"Salary: {employee['Basic Salary'] + employee['Sales']:.2f}"
+        self.salary_var.set(salary_text)
+
+class CarTab(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Create and place the car name label and entry
+        self.name_label = tk.Label(self, text="Name")
+        self.name_label.grid(row=0, column=0)
+        self.name_entry = tk.Entry(self)
+        self.name_entry.grid(row=0, column=1)
+
+        # Create and place the car price label and entry
+        self.price_label = tk.Label(self, text="Price")
+        self.price_label.grid(row=1, column=0)
+        self.price_entry = tk.Entry(self)
+        self.price_entry.grid(row=1, column=1)
+
+        # Create and place the car type label and entry
+        self.type_label = tk.Label(self, text="Type")
+        self.type_label.grid(row=2, column=0)
+        self.type_entry = tk.Entry(self)
+        self.type_entry.grid(row=2, column=1)
+
+        # Create and place the fuel capacity label and entry
+        self.fuel_capacity_label = tk.Label(self, text="Fuel Capacity")
+        self.fuel_capacity_label.grid(row=3, column=0)
+        self.fuel_capacity_entry = tk.Entry(self)
+        self.fuel_capacity_entry.grid(row=3, column=1)
+
+        # Create and place the max speed label and entry
+        self.max_speed_label = tk.Label(self, text="Max Speed")
+        self.max_speed_label.grid(row=4, column=0)
+        self.max_speed_entry = tk.Entry(self)
+        self.max_speed_entry.grid(row=4, column=1)
+
+        # Create and place the car color label and entry
+        self.color_label = tk.Label(self, text="Color")
+        self.color_label.grid(row=5, column=0)
+        self.color_entry = tk.Entry(self)
+        self.color_entry.grid(row=5, column=1)
+
+        # Create and place the add car button
+        self.add_button = tk.Button(self, text="Add", command=self.add_car)
+        self.add_button.grid(row=6, column=0)
+
+        # Create and place the delete car button
+        self.delete_button = tk.Button(self, text="Delete", command=self.delete_car)
+        self.delete_button.grid(row=6, column=1)
+
+        # Create and place the edit car button
+        self.edit_button = tk.Button(self, text="Edit", command=self.edit_car)
+        self.edit_button.grid(row=6, column=2)
+
+        # Create and place the update car button
+        self.update_button = tk.Button(self, text="Update", command=self.update_car)
+        self.update_button.grid(row=6, column=3)
+
+        # Create and place the car listbox
+        self.car_listbox = tk.Listbox(self)
+        self.car_listbox.grid(row=7, columnspan=3, sticky="ew")
+        self.refresh_car_list()
+
+    def update_car(self):
+        # Get the selected item from the car listbox
+        selected = self.car_listbox.curselection()
+        if not selected:
+            # Show an error message if no car is selected
+            messagebox.showerror("Error", "No car selected.")
+            return
+
+        try:
+            # Retrieve old and new car information from the selected car and input fields
+            old_car_name = self.car_listbox.get(selected).split(" - ")[0]
+            new_car_name = self.name_entry.get()
+            price = int(self.price_entry.get())
+            car_type = self.type_entry.get()
+            fuel_capacity = int(self.fuel_capacity_entry.get())
+            max_speed = int(self.max_speed_entry.get())
+            color = self.color_entry.get()
+
+            # Check if all required fields are filled
+            if not new_car_name or not car_type or not color:
+                messagebox.showerror("Error", "Please fill in all fields.")
+                return
+
+            # Update the car information in the cars dictionary
+            del cars[old_car_name]
+            cars[new_car_name] = {'Price': price, 'Type': car_type, 'Fuel Capacity': fuel_capacity,
+                                  'Max Speed': max_speed, 'Color': color}
+            # Refresh the car listbox and show a success message
+            self.refresh_car_list()
+            messagebox.showinfo("Success", "Car updated.")
+            save_data()
+        except ValueError:
+            # Show an error message if the input values are invalid
+            messagebox.showerror("Error", "Invalid input. Please enter a valid Price, Fuel Capacity, and Max Speed.")
+
+    def refresh_car_list(self):
+        # Clear the car listbox
+        self.car_listbox.delete(0, tk.END)
+        # Populate the car listbox with updated car information from the cars dictionary
+        for car_name, car in cars.items():
+            self.car_listbox.insert(tk.END, f"{car_name} - {car['Type']}")
+
+    def edit_car(self):
+        # Get the selected item from the car listbox
+        selected = self.car_listbox.curselection()
+        if not selected:
+            # Show an error message if no car is selected
+            messagebox.showerror("Error", "No car selected.")
+            return
+
+        # Retrieve car information from the selected car
+        car_name = self.car_listbox.get(selected).split(" - ")[0]
+        car = cars[car_name]
+
+        # Update the input fields with the selected car's information
+        self.name_entry.delete(0, tk.END)
+        self.name_entry.insert(0, car_name)
+        self.price_entry.delete(0, tk.END)
+        self.price_entry.insert(0, str(car['Price']))
+        self.type_entry.delete(0, tk.END)
+        self.type_entry.insert(0, car['Type'])
+        self.fuel_capacity_entry.delete(0, tk.END)
+        self.fuel_capacity_entry.insert(0, str(car['Fuel Capacity']))
+        self.max_speed_entry.delete(0, tk.END)
+        self.max_speed_entry.insert(0, str(car['Max Speed']))
+        self.color_entry.delete(0, tk.END)
+        self.color_entry.insert(0, car['Color'])
+
+    def add_car(self):
+        try:
+            # Get car information from the input fields
+            name = self.name_entry.get()
+            price = int(self.price_entry.get())
+            car_type = self.type_entry.get()
+            fuel_capacity = int(self.fuel_capacity_entry.get())
+            max_speed = int(self.max_speed_entry.get())
+            color = self.color_entry.get()
+
+            # Check if all required fields are filled
+            if not name or not car_type or not color:
+                messagebox.showerror("Error", "Please fill in all fields.")
+                return
+
+            # Check if the car name already exists in the cars dictionary
+            if name in cars:
+                messagebox.showerror("Error", "Car name already exists.")
+                return
+
+            # Add the new car to the cars dictionary
+            cars[name] = {'Price': price, 'Type': car_type, 'Fuel Capacity': fuel_capacity, 'Max Speed': max_speed,
+                          'Color': color}
+            # Refresh the car listbox and show a success message
+            self.refresh_car_list()
+            messagebox.showinfo("Success", "Car added.")
+            save_data()
+        except ValueError:
+            # Show an error message if the input values are invalid
+            messagebox.showerror("Error", "Invalid input. Please enter a valid Price, Fuel Capacity, and Max Speed.")
+
+    def delete_car(self):
+        # Get the selected item from the car listbox
+        selected = self.car_listbox.curselection()
+        if not selected:
+        # Show an error message if no car is selected
+            messagebox.showerror("Error", "No car selected.")
+            return
+
+        # Get the car name from the selected listbox item
+        name = self.car_listbox.get(selected).split(" - ")[0]
+
+        # Check if the car exists in the cars dictionary
+        if name not in cars:
+            messagebox.showerror("Error", "Car not found.")
+            return
+
+        # Remove the car from the cars dictionary
+        del cars[name]
+        # Refresh the car listbox and show a success message
+        self.refresh_car_list()
+        messagebox.showinfo("Success", "Car deleted.")
+        save_data()
+
+class SalesTab(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        # Create widgets for the SalesTab
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Create and position Employee ID label and entry
+        self.employee_id_label = tk.Label(self, text="Employee ID")
+        self.employee_id_label.grid(row=0, column=0)
+        self.employee_id_entry = tk.Entry(self)
+        self.employee_id_entry.grid(row=0, column=1)
+
+        # Create and position Car Name label and entry
+        self.car_name_label = tk.Label(self, text="Car Name")
+        self.car_name_label.grid(row=1, column=0)
+        self.car_name_entry = tk.Entry(self)
+        self.car_name_entry.grid(row=1, column=1)
+
+        # Create and position Sale Price label and entry
+        self.sale_price_label = tk.Label(self, text="Sale Price")
+        self.sale_price_label.grid(row=2, column=0)
+        self.sale_price_entry = tk.Entry(self)
+        self.sale_price_entry.grid(row=2, column=1)
+
+        # Create and position Add Sale button
+        self.add_sale_button = tk.Button(self, text="Add Sale", command=self.add_sale)
+        self.add_sale_button.grid(row=3, columnspan=2)
+
+        # Create and position Sales Listbox
+        self.sales_listbox = tk.Listbox(self, width=50)
+        self.sales_listbox.grid(row=5, column=0, columnspan=4)
+        self.refresh_sales_list()
+
+        # Create and position Edit Sale button
+        self.edit_sale_button = tk.Button(self, text="Edit Sale", command=self.edit_sale)
+        self.edit_sale_button.grid(row=4, column=0)
+
+        # Create and position Delete Sale button
+        self.delete_sale_button = tk.Button(self, text="Delete Sale", command=self.delete_sale)
+        self.delete_sale_button.grid(row=4, column=1)
+
+        # Create and position Add Sale button (Duplicate, should be removed)
+        self.add_sale_button = tk.Button(self, text="Add Sale", command=self.add_sale)
+        self.add_sale_button.grid(row=3, columnspan=2)
+
+        # Create and position Edit Sale button (Duplicate, should be removed)
+        self.edit_sale_button = tk.Button(self, text="Edit Sale", command=self.edit_sale)
+        self.edit_sale_button.grid(row=4, column=0)
+
+        # Create and position Delete button (Duplicate, should be removed)
+        self.delete_button = tk.Button(self, text="Delete", command=self.delete_selected_sale)
+        self.delete_sale_button.grid(row=4, column=1)
+
+        # Create and position Sales Listbox (Duplicate, should be removed)
+        self.sales_listbox = tk.Listbox(self, width=50)
+        self.refresh_sales_list()
+
+
+    def refresh_sales_list(self):
+        # Clear the sales listbox
+        self.sales_listbox.delete(0, tk.END)
+        # Iterate through sales and add them to the sales listbox
+        for sale in sales:
+            self.sales_listbox.insert(tk.END, f"{sale['Employee ID']} - {sale['Car']} - {sale['Sale Price']}")
+
+    def edit_sale(self):
+        # Get the selected item from the sales listbox
+        selected = self.sales_listbox.curselection()
+        if not selected:
+            messagebox.showerror("Error", "No sale selected.")
+            return
+
+        # Split the selected sale information into its components
+        employee_id, car_name, sale_price = self.sales_listbox.get(selected).split(" - ")
+
+        # Update the entry fields with the selected sale information
+        self.employee_id_entry.delete(0, tk.END)
+        self.employee_id_entry.insert(0, employee_id)
+        self.car_name_entry.delete(0, tk.END)
+        self.car_name_entry.insert(0, car_name)
+        self.sale_price_entry.delete(0, tk.END)
+        self.sale_price_entry.insert(0, sale_price)
+
+        # Remove the selected sale from the list
+        self.delete_sale(employee_id, car_name, sale_price)
+
+    def delete_sale(self, employee_id, car_name, sale_price):
+        # Find the sale to remove
+        sale_to_remove = None
+        for sale in sales:
+            if (str(sale['Employee ID']) == employee_id and sale['Car'] == car_name and str(
+                    sale['Sale Price']) == sale_price):
+                sale_to_remove = sale
+                break
+
+        # Remove the sale from the sales list and update the sales listbox
+        if sale_to_remove is not None:
+            sales.remove(sale_to_remove)
+            save_data(sales, SALES_DATA_FILE)
+            self.refresh_sales_list()
+        else:
+            messagebox.showerror("Error", "Sale not found.")
+
+    def delete_selected_sale(self):
+        # Get the selected item from the sales listbox
+        selected = self.sales_listbox.curselection()
+        if not selected:
+            messagebox.showerror("Error", "No sale selected.")
+            return
+
+        # Split the selected sale information into its components
+        employee_id, car_name, sale_price = self.sales_listbox.get(selected).split(" - ")
+        # Remove the selected sale
+        self.delete_sale(employee_id, car_name, sale_price)
+
+    def add_sale(self):
+        try:
+            # Get the sale information from the entry fields
+            employee_id = int(self.employee_id_entry.get())
+            car_name = self.car_name_entry.get()
+            sale_price = int(self.sale_price_entry.get())
+
+            # Check if the employee and car exist
+            if employee_id not in employees or car_name not in cars:
+                messagebox.showerror("Error", "Employee or Car not found.")
+                return
+
+            # Calculate the profit and update the employee's sales
+            profit = sale_price - cars[car_name]['Price']
+            employees[employee_id]['Sales'] += profit
+
+            # Create a dictionary with the sale information and append it to the sales list
+            sale_info = {'Employee ID': employee_id, 'Car': car_name, 'Sale Price': sale_price}
+            sales.append(sale_info)
+
+            # Save the updated sales and employee data
+            save_data(sales, SALES_DATA_FILE)
+            save_data(employees, EMPLOYEE_DATA_FILE)
+
+            # Show a success message and refresh the sales listbox
+            messagebox.showinfo("Success", "Sale added.")
+            self.refresh_sales_list()
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input. Please enter a valid Employee ID and Sale Price.")
+
+class SalaryTab(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        # Create widgets for the SalaryTab
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Create and position Employee ID label and entry
+        self.employee_id_label = tk.Label(self, text="Employee ID")
+        self.employee_id_label.grid(row=0, column=0)
+        self.employee_id_entry = tk.Entry(self)
+        self.employee_id_entry.grid(row=0, column=1)
+
+        # Create and position Show Salary button
+        self.show_salary_button = tk.Button(self, text="Show Salary", command=self.show_salary)
+        self.show_salary_button.grid(row=1, columnspan=2)
+
+        # Create and position Salary label
+        self.salary_label = tk.Label(self, text="")
+        self.salary_label.grid(row=2, columnspan=2)
+
+    def show_salary(self):
+        try:
+            # Get the Employee ID from the entry field
+            employee_id = int(self.employee_id_entry.get())
+
+            # Check if the employee exists
+            if employee_id not in employees:
+                messagebox.showerror("Error", "Employee not found.")
+                return
+
+            # Calculate the employee's salary based on their basic salary, sales, and commission rate
+            basic_salary = employees[employee_id]['Basic Salary']
+            sales = employees[employee_id]['Sales']
+            commission_rate = 0.065 if employees[employee_id]['Job Title'] == 'Salesperson' else 0.035
+            commission = sales * commission_rate
+
+            # Calculate and display the total salary
+            salary = basic_salary + commission
+            self.salary_label.config(text=f"Salary: {salary:.2f}")
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input. Please enter a valid Employee ID.")
+
+if __name__ == "__main__":
+    # Create and run the application
+    app = App()
+    app.mainloop()
